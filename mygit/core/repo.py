@@ -12,15 +12,25 @@ class Repo:
             print("Repo déjà initialisé")
             return
         
-        (self.mygit / "commits").mkdir(parents=True)
-        (self.mygit / "snapshots").mkdir(parents=True)
+        self.mygit.mkdir()
 
-        (self.mygit / "HEAD").write_text("")
+        for dirname in ["commits", "objects"]:
+            (self.mygit / dirname).mkdir()
+
+        head = {
+            "commit": None
+        }
+
+        index = {}
 
         config = {
             "created_at": datetime.now().isoformat(),
             "version": "0.1"
         }
+
+        (self.mygit / "HEAD").write_text(json.dumps(head, indent=2))
+
+        (self.mygit / "index.json").write_text(json.dumps(index, indent=2))
 
         (self.mygit / "config.json").write_text(json.dumps(config, indent=2))
 
